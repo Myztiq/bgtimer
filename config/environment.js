@@ -18,9 +18,11 @@ module.exports = function(environment) {
     },
 
     cordova: {
-      rebuildOnChange: false,
+      rebuildOnChange: true,
       rebuildAsync: false,
-      emulate: false
+      emulate: true,
+      platform: 'ios'
+
     }
   };
 

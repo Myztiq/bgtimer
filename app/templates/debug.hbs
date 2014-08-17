@@ -1,0 +1,24 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>LED</th>
+      <th>Button</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each player in players}}
+      <tr>
+        <td>{{player.id}}</td>
+        <td>
+          {{input type="checkbox" checked=player.led}}
+          {{player.led}}
+        </td>
+        <td>
+          {{input type="checkbox" checked=player.button}}
+          {{player.button}}
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
