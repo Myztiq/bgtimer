@@ -6,38 +6,57 @@ BluetoothController = Ember.Controller.extend
 
   connectionStatus: 'disconnected'
 
+  connectedDevice: null
+
   connected:     Ember.computed.equal 'connectionStatus', 'connected'
   connecting:    Ember.computed.equal 'connectionStatus', 'connecting'
   disconnected:  Ember.computed.equal 'connectionStatus', 'disconnected'
   disconnecting: Ember.computed.equal 'connectionStatus', 'disconnecting'
 
-  asdf: (->
-    console.log "cantConnect: ", @get 'cantConnect'
-  ).observes 'cantConnect'
-
   connectionStatusObserver: (->
     console.log 'Connection status changed: ', @get 'connectionStatus'
   ).observes 'connectionStatus'
 
-  connectingObserver: (->
-    console.log 'Connecting changed', @get 'connecting'
-    if @get 'connecting'
-      blutoothle.stopScan (->
-        console.log 'Stopped scanning'
-      ), (err)->
-        console.log 'Error stopping scan', JSON.stringify err, 0, 2
-  ).observes 'connecting'
+  scanning: false
 
-#  connectedObserver: (->
-#    if @get 'connected'
-#      console.log 'Connected. Asking for services! Because why not?!'
-#      bluetoothle.services ((rtn)->
-#        console.log 'Got services'
-#        console.log JSON.stringify rtn, 0, 2
-#      ), (err)->
-#        console.log 'Error getting services'
+  connectingObserver: (->
+    if ['connecting', 'connected'].indexOf @get('connectionStatus') >= 0
+      if @get 'scanning'
+        @set 'scanning', false
+        bluetoothle.stopScan (->
+          console.log 'Stopped scanning'
+        ), (err)->
+          console.log 'Error stopping scan', JSON.stringify err, 0, 2
+  ).observes 'connectionStatus'
+
+  connectedObserver: (->
+    if @get 'connected'
+      console.log 'Connected. Asking for services! Because why not?!'
+      bluetoothle.services ((rtn)->
+        console.log 'Got services'
+        console.log JSON.stringify rtn, 0, 2
+        if rtn.status == 'discoveredServices'
+          for service in rtn.serviceUuids
+            do (service)->
+              console.log 'Getting characteristics for service', service
+              bluetoothle.characteristics ((rtn)->
+                console.log 'Got Characteristics for service', service
+                console.log JSON.stringify rtn, 0, 2
+
+                bluetoothle.subscribe ((dataUpdated)->
+                  console.log dataUpdated.value
+                  console.log atob dataUpdated.value
+                ), (err)->
+                  console.log 'Error subscribing to value', JSON.stringify err, 0, 2
+                , {"serviceUuid":"fff0","characteristicUuid":"ff10"}
+              ), ((err)->
+                console.log 'Err getting characteristics', JSON.stringify err
+              ), {serviceUuid: service}
+
+      ), (err)->
+        console.log 'Error getting services'
 #        console.log JSON.stringify err, 0, 2
-#  ).observes 'connected'
+  ).observes 'connected'
 
   enabled: false
   enabledObserver: (->
@@ -46,7 +65,6 @@ BluetoothController = Ember.Controller.extend
   ).observes 'enabled'
 
   devices: []
-  scanning: false
   actions:
     enable: ->
       console.log 'Enabling Bluetooth'
