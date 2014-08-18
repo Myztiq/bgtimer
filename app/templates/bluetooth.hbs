@@ -1,6 +1,7 @@
-{{#if connectionStatus}}
-  {{connectionStatus}}
-{{else}}
+{{connectionStatus}}
+<br/>
+<br/>
+{{#if disconnected}}
   {{#if enabled}}
     {{#if scanning}}
       Scanning...
