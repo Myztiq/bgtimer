@@ -34,13 +34,12 @@ BluetoothController = Ember.Controller.extend
     if connected and connectedDevice
       console.log 'Connected! Now to read all service data...'
       evothings.ble.readAllServiceData connectedDevice, ((serviceData)->
-        console.log 'Got Service Data. Good luck!'
+        console.log 'Got Service Data. Good luck trying to figure out where to put shit now!'
+        console.log "Don't let the UUID's fool you, ignore the leading 0's and anything after the -'s and you have what you are looking for!"
         console.log JSON.stringify serviceData, 0, 2
       ), (err)->
         console.log 'Error getting service data', err
   ).observes 'connected', 'connectedDevice'
-
-  services: []
 
   devices: []
   actions:
