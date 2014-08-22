@@ -2,106 +2,74 @@
 
 BluetoothController = Ember.Controller.extend
   init: ->
-    @send 'enable'
+    @send 'scan'
 
-  connectionStatus: 'disconnected'
+  connectionStatus: 'STATE_DISCONNECTED'
 
   connectedDevice: null
 
-  connected:     Ember.computed.equal 'connectionStatus', 'connected'
-  connecting:    Ember.computed.equal 'connectionStatus', 'connecting'
-  disconnected:  Ember.computed.equal 'connectionStatus', 'disconnected'
-  disconnecting: Ember.computed.equal 'connectionStatus', 'disconnecting'
-
-  connectionStatusObserver: (->
-    console.log 'Connection status changed: ', @get 'connectionStatus'
-  ).observes 'connectionStatus'
+  connected:     Ember.computed.equal 'connectionStatus', 'STATE_CONNECTED'
+  connecting:    Ember.computed.equal 'connectionStatus', 'STATE_CONNECTING'
+  disconnected:  Ember.computed.equal 'connectionStatus', 'STATE_DISCONNECTED'
+  disconnecting: Ember.computed.equal 'connectionStatus', 'STATE_DISCONNECTING'
 
   scanning: false
 
   connectingObserver: (->
-    if ['connecting', 'connected'].indexOf @get('connectionStatus') >= 0
-      if @get 'scanning'
-        @set 'scanning', false
-        bluetoothle.stopScan (->
-          console.log 'Stopped scanning'
-        ), (err)->
-          console.log 'Error stopping scan', JSON.stringify err, 0, 2
-  ).observes 'connectionStatus'
+    connected = @get 'connected'
+    connecting = @get 'connecting'
+    scanning = @get 'scanning'
+    if (connected or connecting) and scanning
+      console.log 'Stopping scanning!'
+      @set 'scanning', false
+      evothings.ble.stopScan (->
+        console.log 'Stopped scanning'
+      ), (err)->
+        console.log 'Error stopping scan', err
+  ).observes 'connected', 'connecting', 'scanning'
 
   connectedObserver: (->
-    if @get 'connected'
-      console.log 'Connected. Asking for services! Because why not?!'
-      bluetoothle.services ((rtn)->
-        console.log 'Got services'
-        console.log JSON.stringify rtn, 0, 2
-        if rtn.status == 'discoveredServices'
-          for service in rtn.serviceUuids
-            do (service)->
-              console.log 'Getting characteristics for service', service
-              bluetoothle.characteristics ((rtn)->
-                console.log 'Got Characteristics for service', service
-                console.log JSON.stringify rtn, 0, 2
-
-                bluetoothle.subscribe ((dataUpdated)->
-                  console.log dataUpdated.value
-                  console.log atob dataUpdated.value
-                ), (err)->
-                  console.log 'Error subscribing to value', JSON.stringify err, 0, 2
-                , {"serviceUuid":"fff0","characteristicUuid":"ff10"}
-              ), ((err)->
-                console.log 'Err getting characteristics', JSON.stringify err
-              ), {serviceUuid: service}
-
+    connectedDevice = @get 'connectedDevice'
+    connected = @get 'connected'
+    if connected and connectedDevice
+      console.log 'Connected! Now to read all service data...'
+      evothings.ble.readAllServiceData connectedDevice, ((serviceData)->
+        console.log 'Got Service Data. Good luck!'
+        console.log JSON.stringify serviceData, 0, 2
       ), (err)->
-        console.log 'Error getting services'
-#        console.log JSON.stringify err, 0, 2
-  ).observes 'connected'
+        console.log 'Error getting service data', err
+  ).observes 'connected', 'connectedDevice'
 
-  enabled: false
-  enabledObserver: (->
-    if @get 'enabled'
-      @send 'scan'
-  ).observes 'enabled'
+  services: []
 
   devices: []
   actions:
-    enable: ->
-      console.log 'Enabling Bluetooth'
-      bluetoothle.initialize ((rtn)=>
-        console.log 'Bluetooth Initialized', JSON.stringify rtn, 0, 2
-        if rtn.status == 'enabled'
-          @set 'enabled', true
-        else
-          @set 'enabled', false
-      ), (err)->
-        console.log 'Initialization failure', JSON.stringify err, 0, 2
-      , request: true
-
     scan: ->
-      bluetoothle.startScan ((rtn)=>
-        if rtn.status == 'scanStarted'
-          @set 'scanning', true
-        else if rtn.status == 'scanResult'
-          devices = @get 'devices'
-          console.log "Found new device:", JSON.stringify(rtn, 0, 2)
-          devices.pushObject
-            address: rtn.address
-            name: rtn.name
-            rssi: rtn.rssi
+      @set 'devices', []
+      @set 'scanning', true
+      devices = @get 'devices'
+      evothings.ble.startScan ((rtn)=>
+        device = devices.findBy 'address', rtn.address
+        if device?
+          device.setProperties rtn
+        else
+          devices.pushObject Ember.Object.create rtn
       ), (err)->
-        console.log 'Scan Failure', JSON.stringify err, 0, 2
+        console.log 'Scan Failure', err
 
     connect: (device)->
-      console.log 'Connecting to device', JSON.stringify(device, 0, 2)
+      evothings.ble.connect device.address, ((info)=>
+        state = evothings.ble.connectionState[info.state]
+        console.log 'Updated connection state', state
+        @set 'connectionStatus', state
+        console.log 'Connection status updated'
 
-      bluetoothle.connect ((rtn)=>
-        @set 'connectionStatus', rtn.status
+        if state == 'STATE_CONNECTED'
+          console.log 'Connected', info.deviceHandle
+          @set 'connectedDevice', info.deviceHandle
+
       ), ((err)->
-        console.log 'Error connecting', JSON.stringify err, 0, 2
-      ), address: device.address
-
-
-
+        console.log 'Error connecting', err
+      )
 
 `export default BluetoothController`

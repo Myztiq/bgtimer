@@ -2,35 +2,31 @@
 <br/>
 <br/>
 {{#if disconnected}}
-  {{#if enabled}}
-    {{#if scanning}}
-      Scanning...
-      {{#if devices.length}}
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <th></th>
-            <th>Address</th>
-            <th>Name</th>
-            <th>RSSI</th>
-          </tr>
-          </thead>
-          <tbody>
-            {{#each device in devices}}
-              <tr>
-                <td><div class="btn btn-primary" {{action 'connect' device}}>Connect</div></td>
-                <td>{{device.address}}</td>
-                <td>{{device.name}}</td>
-                <td>{{device.rssi}}</td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      {{/if}}
-    {{else}}
-      <div class="btn btn-primary" {{action 'scan'}}>Start Scanning</div>
+  {{#if scanning}}
+    Scanning...
+    {{#if devices.length}}
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Address</th>
+          <th>Name</th>
+          <th>RSSI</th>
+        </tr>
+        </thead>
+        <tbody>
+          {{#each device in devices}}
+            <tr>
+              <td><div class="btn btn-primary" {{action 'connect' device}}>Connect</div></td>
+              <td>{{device.address}}</td>
+              <td>{{device.name}}</td>
+              <td>{{device.rssi}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
     {{/if}}
   {{else}}
-    <div class="btn btn-primary" {{action 'enable'}}>Enable Bluetooth</div>
+    <div class="btn btn-primary" {{action 'scan'}}>Start Scanning</div>
   {{/if}}
 {{/if}}
