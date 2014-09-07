@@ -1,0 +1,27 @@
+<h3>Game Name</h3>
+{{input type="text" value=name}}
+
+<br/>
+<br/>
+<h3>Players</h3>
+<div class="well">
+  {{#each player in players}}
+    {{player.name}}
+    <div class="btn btn-danger" {{action 'remove' player}}>X</div>
+    <br/>
+    <br/>
+  {{/each}}
+</div>
+
+{{#link-to 'player.new'}}
+  <div class="btn btn-primary">Add Player</div>
+{{/link-to}}
+
+
+{{#if players.length}}
+  <br/>
+  <br/>
+  {{#link-to 'game.pick-order'}}
+    <div class="btn btn-primary">Pick order</div>
+  {{/link-to}}
+{{/if}}

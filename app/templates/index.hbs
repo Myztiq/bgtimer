@@ -1,1 +1,34 @@
-Welcome.
+<h1>Connect</h1>
+<div style="display: none">
+  {{connectionStatus}}
+</div>
+
+{{#if connecting}}
+  Connecting...
+{{/if}}
+
+{{#if connected}}
+  Connected.
+{{/if}}
+
+{{#if scanning}}
+  Scanning...
+  {{#if devices.length}}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th></th>
+        <th>Name</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each device in devices}}
+        <tr>
+          <td><div class="btn btn-primary" {{action 'connect' device}}>Connect</div></td>
+          <td>{{device.name}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+{{/if}}

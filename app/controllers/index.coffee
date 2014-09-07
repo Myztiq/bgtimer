@@ -1,8 +1,11 @@
 `import Ember from 'ember'`
 
-BluetoothController = Ember.Controller.extend
+IndexController = Ember.Controller.extend
   init: ->
-    @send 'scan'
+    setTimeout =>
+      @send 'scan'
+    , 500
+
 
   connectionStatus: 'STATE_DISCONNECTED'
 
@@ -28,19 +31,6 @@ BluetoothController = Ember.Controller.extend
         console.log 'Error stopping scan', err
   ).observes 'connected', 'connecting', 'scanning'
 
-  connectedObserver: (->
-    connectedDevice = @get 'connectedDevice'
-    connected = @get 'connected'
-    if connected and connectedDevice
-      console.log 'Connected! Now to read all service data...'
-      evothings.ble.readAllServiceData connectedDevice, ((serviceData)->
-        console.log 'Got Service Data. Good luck trying to figure out where to put shit now!'
-        console.log "Don't let the UUID's fool you, ignore the leading 0's and anything after the -'s and you have what you are looking for!"
-        console.log JSON.stringify serviceData, 0, 2
-      ), (err)->
-        console.log 'Error getting service data', err
-  ).observes 'connected', 'connectedDevice'
-
   devices: []
   actions:
     scan: ->
@@ -65,10 +55,13 @@ BluetoothController = Ember.Controller.extend
 
         if state == 'STATE_CONNECTED'
           console.log 'Connected', info.deviceHandle
+          @send 'connectedDevice', info.deviceHandle
           @set 'connectedDevice', info.deviceHandle
+        else
+          @send 'bluetoothDisconnected'
 
       ), ((err)->
         console.log 'Error connecting', err
       )
 
-`export default BluetoothController`
+`export default IndexController`

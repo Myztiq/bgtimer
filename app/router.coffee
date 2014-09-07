@@ -5,6 +5,13 @@ Router = Ember.Router.extend
 
 Router.map ->
   @route 'debug'
-  @route 'bluetooth'
+  @route '/'
+  @route 'home'
+
+  @resource 'game', {path: 'game/:game_id'}, ->
+    @route 'pick-order'
+    @resource 'player', ->
+      @route 'edit', {path: ':player_id'}
+      @route 'new'
 
 `export default Router`

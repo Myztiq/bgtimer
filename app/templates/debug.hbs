@@ -15,8 +15,7 @@
           {{player.led}}
         </td>
         <td>
-          {{input type="checkbox" checked=player.button}}
-          {{player.button}}
+          <div class="btn btn-primary" {{action 'toggleButton' player}}>Button</div>
         </td>
       </tr>
     {{/each}}

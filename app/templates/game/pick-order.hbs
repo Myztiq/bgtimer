@@ -1,0 +1,10 @@
+<h1>Pick Order</h1>
+<p>Each player should press their button starting with the first player.</p>
+
+{{#each player in players}}
+  {{player.name}} - {{player.hasPressed}}
+{{/each}}
+
+{{#if orderSet}}
+  <div class="btn btn-success" {{action 'start'}}>Start Game</div>
+{{/if}}
