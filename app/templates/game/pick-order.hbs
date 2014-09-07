@@ -1,10 +1,33 @@
-<h1>Pick Order</h1>
-<p>Each player should press their button starting with the first player.</p>
+<div class="bar bar-header bar-light">
+  <h1 class="title">Pick Order</h1>
+</div>
 
-{{#each player in players}}
-  {{player.name}} - {{player.hasPressed}}
-{{/each}}
+<div class="content has-header">
+  <br/>
+  <p class="text-center">Each player should press their button starting with the first player.</p>
 
-{{#if orderSet}}
-  <div class="btn btn-success" {{action 'start'}}>Start Game</div>
-{{/if}}
+  <div class="list">
+
+    {{#each player in players}}
+      <div class="item item-icon-right">
+        {{player.name}}
+        {{#if player.hasPressed}}
+          <i class="ion-ios7-checkmark icon"></i>
+        {{else}}
+          <i class="ion-ios7-checkmark-outline icon"></i>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+  {{#if orderSet}}
+    <div class="button button-full button-positive" {{action 'start'}}>Start Game</div>
+  {{/if}}
+</div>
+
+
+
+
+
+
+
+

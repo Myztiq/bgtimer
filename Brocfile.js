@@ -4,6 +4,13 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp();
 
+app.import('vendor/ionic/release/js/ionic.js');
+
+app.import('vendor/ionicons/fonts/ionicons.eot', {destDir: 'fonts'});
+app.import('vendor/ionicons/fonts/ionicons.svg', {destDir: 'fonts'});
+app.import('vendor/ionicons/fonts/ionicons.ttf', {destDir: 'fonts'});
+app.import('vendor/ionicons/fonts/ionicons.woff', {destDir: 'fonts'});
+
 // Use `app.import` to add additional libraries to the generated
 // output files.
 //

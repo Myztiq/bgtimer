@@ -30,6 +30,7 @@ Controller = Ember.ObjectController.extend
         bound.set 'active', true
 
       bound.set 'name', @get('name')
+      @set 'name', null
       @get('controllers.game.players').addObject(bound)
       @transitionToRoute 'game', @get 'controllers.game.model'
 

@@ -1,11 +1,31 @@
-<h2>Player Name</h2>
-{{input type="text" value=name placeholder="Ryan"}}
+<div class="bar bar-header bar-light">
+  <h1 class="title">Add Player</h1>
+</div>
 
-<br/>
-<br/>
+<div class="content has-header">
+  <form {{action 'save' on='submit'}}>
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">Player Name</span>
+        {{input type="text" value=name required=true}}
+      </label>
+    </div>
 
-{{#if bound}}
-  <div class="btn btn-success" {{action 'save'}}>Save</div>
-{{else}}
-  Press your button {{name}}
-{{/if}}
+    {{#if bound}}
+
+      <p class="text-center">The player has pressed their button.</p>
+      <div class="large-icon">
+        <i class="ion-ios7-lightbulb icon"></i>
+      </div>
+
+      <button type="submit" class="button button-positive button-full">Save</button>
+    {{else}}
+      <p class="text-center">The new player can now press their button.</p>
+
+      <div class="large-icon">
+        <i class="ion-ios7-lightbulb-outline icon"></i>
+      </div>
+    {{/if}}
+  </form>
+</div>
+

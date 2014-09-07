@@ -1,27 +1,46 @@
-<h3>Game Name</h3>
-{{input type="text" value=name}}
-
-<br/>
-<br/>
-<h3>Players</h3>
-<div class="well">
-  {{#each player in players}}
-    {{player.name}}
-    <div class="btn btn-danger" {{action 'remove' player}}>X</div>
-    <br/>
-    <br/>
-  {{/each}}
+<div class="bar bar-header bar-light">
+  <h1 class="title">New Game</h1>
 </div>
 
-{{#link-to 'player.new'}}
-  <div class="btn btn-primary">Add Player</div>
-{{/link-to}}
+<div class="content has-header">
+  <div class="list">
+    <label class="item item-input">
+      <span class="input-label">Game Name</span>
+      {{input type="text" value=name}}
+    </label>
+  </div>
 
 
-{{#if players.length}}
-  <br/>
-  <br/>
-  {{#link-to 'game.pick-order'}}
-    <div class="btn btn-primary">Pick order</div>
-  {{/link-to}}
-{{/if}}
+  <div class="card">
+    <div class="item item-divider">
+      Players
+    </div>
+    {{#if players.length}}
+      <div class="item item-text-wrap">
+        <div class="list">
+          {{#each player in players}}
+            <div class="item item-button-right">
+              {{player.name}}
+              <button class="button button-positive" {{action 'remove' player}}>
+                <i class="ion-ios7-close-outline icon"></i>
+              </button>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+    <div class="item item-divider">
+      {{#link-to 'player.new'}}
+        <div class="button button-positive">Add Player</div>
+      {{/link-to}}
+    </div>
+  </div>
+
+
+  {{#if players.length}}
+    {{#link-to 'game.pick-order' class="no-underline"}}
+      <button class="button button-positive button-full">Pick order</button>
+      <div class="btn btn-primary"></div>
+    {{/link-to}}
+  {{/if}}
+</div>

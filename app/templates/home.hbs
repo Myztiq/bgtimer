@@ -1,13 +1,19 @@
-<div class="text-center">
-  {{#link-to 'game' 'new'}}
-    <div class="btn btn-primary btn-lg">New Game</div>
+<div class="bar bar-header bar-light">
+  <h1 class="title">Board Game Timer</h1>
+</div>
+
+<div class="content has-header">
+
+  {{#link-to 'game' 'new' class="no-underline"}}
+    <button class="button button-full button-positive">
+      New Game
+    </button>
   {{/link-to}}
-  <br/>
-  <br/>
-  <div class="btn btn-warning btn-lg" {{action 'disconnect'}}>Disconnect</div>
-  <br/>
-  <br/>
-  {{#link-to 'debug'}}
-    <div class="btn btn-default btn-lg">Debug</div>
+
+  <div class="button button-full button-energized button-outline" {{action 'disconnect'}}>Disconnect</div>
+
+  {{#link-to 'debug' class="no-underline"}}
+    <div class="button button-full button-light">Debug</div>
   {{/link-to}}
+
 </div>

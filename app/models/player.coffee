@@ -1,4 +1,5 @@
 `import DS from 'ember-data'`
+`import evothings from 'bgtimer/lib/evothings'`
 
 Player = DS.Model.extend
   name: DS.attr 'string'

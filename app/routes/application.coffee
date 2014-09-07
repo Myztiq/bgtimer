@@ -1,4 +1,5 @@
 `import Ember from 'ember'`
+`import evothings from 'bgtimer/lib/evothings'`
 
 AppRoute = Ember.Route.extend
   bluetoothConnection: false

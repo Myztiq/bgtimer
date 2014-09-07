@@ -1,34 +1,42 @@
-<h1>Connect</h1>
+<div class="bar bar-header bar-light">
+  <h1 class="title">Connect to BGTimer</h1>
+</div>
+
 <div style="display: none">
   {{connectionStatus}}
 </div>
 
 {{#if connecting}}
-  Connecting...
+  <div class="bar bar-subheader">
+    <h2 class="title">Connecting...</h2>
+  </div>
 {{/if}}
 
 {{#if connected}}
-  Connected.
+  <div class="bar bar-subheader">
+    <h2 class="title">Connected</h2>
+  </div>
 {{/if}}
 
 {{#if scanning}}
-  Scanning...
-  {{#if devices.length}}
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each device in devices}}
-        <tr>
-          <td><div class="btn btn-primary" {{action 'connect' device}}>Connect</div></td>
-          <td>{{device.name}}</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  {{/if}}
+  <div class="bar bar-subheader">
+    <h2 class="title">Scanning...</h2>
+  </div>
+
+  <div class="content has-header has-subheader">
+    {{#if devices.length}}
+      <div class="list list-inset">
+        {{#each device in devices}}
+          {{#if device.name.length}}
+            <div class="item item-button-right" {{action 'connect' device}}>
+              {{device.name}}
+              <button class="button button-positive">
+                <i class="icon ion-bluetooth"></i>
+              </button>
+            </div>
+          {{/if}}
+        {{/each}}
+      </div>
+    {{/if}}
+  </div>
 {{/if}}
