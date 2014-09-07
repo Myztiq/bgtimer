@@ -4,19 +4,19 @@
 
 <div class="content has-header">
   <br/>
-  <p class="text-center">Each player should press their button starting with the first player.</p>
+  <p class="text-center">Each player should press their button starting with the first player or you can
+    manually pick them from the list.</p>
 
   <div class="list">
-
     {{#each player in players}}
-      <div class="item item-icon-right">
+      <a class="item item-icon-right" {{action 'pickPlayer' player}}>
         {{player.name}}
         {{#if player.hasPressed}}
           <i class="ion-ios7-checkmark icon"></i>
         {{else}}
           <i class="ion-ios7-checkmark-outline icon"></i>
         {{/if}}
-      </div>
+      </a>
     {{/each}}
   </div>
   {{#if orderSet}}

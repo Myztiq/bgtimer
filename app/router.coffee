@@ -10,6 +10,7 @@ Router.map ->
 
   @resource 'game', {path: 'game/:game_id'}, ->
     @route 'pick-order'
+    @route 'status'
     @resource 'player', ->
       @route 'edit', {path: ':player_id'}
       @route 'new'

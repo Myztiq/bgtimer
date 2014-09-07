@@ -5,13 +5,21 @@ Player = DS.Model.extend
   name: DS.attr 'string'
 
   active: false
-  hasPressed: false
+  _hasPressed: false
+  hasPressed: ((key, value)->
+    if value?
+      @set '_hasPressed', value
+
+    if @get('_button') == true
+      @set '_hasPressed', true
+
+    @get '_hasPressed'
+  ).property '_button'
 
   _led: null
   led: ((key, val)->
     if val?
       @set '_led', val
-      @set 'hasPressed', true
 
       console.log 'Setting led to', val
       evothings.ble.writeCharacteristic(
@@ -38,33 +46,33 @@ Player = DS.Model.extend
           console.log 'Update Failure', err
       )
     @get '_button'
-  ).property()
+  ).property('_button')
 
   buttonCharacteristicHandle: null
   ledCharacteristicHandle: null
   serviceHandle: null
   deviceHandle: null
 
-  buttonCharacteristicWatcher: (->
-    buttonCharacteristicHandle = @get('buttonCharacteristicHandle')
-    deviceHandle = @get 'deviceHandle'
-    serviceHandle = @get('serviceHandle')
-    if buttonCharacteristicHandle? and serviceHandle? and deviceHandle?
-      console.log 'Setting up button!'
-      evothings.ble.enableNotification(
-        deviceHandle,
-        buttonCharacteristicHandle,
-        ((newVal)=>
-          newVal = evothings.ble.fromUtf8(newVal)
-          if newVal == 'true'
-            @set '_button', true
-          else
-            @set '_button', false
-        ), (err)->
-          console.log 'Error subscribing to button status', err
-      )
-
-  ).observes 'buttonCharacteristicHandle', 'serviceHandle', 'deviceHandle'
+#  buttonCharacteristicWatcher: (->
+#    buttonCharacteristicHandle = @get('buttonCharacteristicHandle')
+#    deviceHandle = @get 'deviceHandle'
+#    serviceHandle = @get('serviceHandle')
+#    if buttonCharacteristicHandle? and serviceHandle? and deviceHandle?
+#      console.log 'Setting up button!'
+#      evothings.ble.enableNotification(
+#        deviceHandle,
+#        buttonCharacteristicHandle,
+#        ((newVal)=>
+#          newVal = evothings.ble.fromUtf8(newVal)
+#          if newVal == 'true'
+#            @set '_button', true
+#          else
+#            @set '_button', false
+#        ), (err)->
+#          console.log 'Error subscribing to button status', err
+#      )
+#
+#  ).observes 'buttonCharacteristicHandle', 'serviceHandle', 'deviceHandle'
 
   ledCharacteristicWatcher: (->
     ledCharacteristicHandle = @get('ledCharacteristicHandle')
@@ -77,6 +85,12 @@ Player = DS.Model.extend
         ledCharacteristicHandle,
         ((newVal)=>
           newVal = evothings.ble.fromUtf8(newVal)
+
+          @set '_button', true
+          setTimeout =>
+            @set '_button', false
+          , 100
+
           if newVal == 'true'
             @set '_led', true
           else

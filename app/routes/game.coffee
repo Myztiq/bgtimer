@@ -1,4 +1,5 @@
 `import Ember from 'ember'`
+`import evothings from 'bgtimer/lib/evothings'`
 
 DebugRoute = Ember.Route.extend
   model: (params)->
@@ -6,5 +7,8 @@ DebugRoute = Ember.Route.extend
       @store.createRecord 'game'
     else
       @store.find('game', params.game_id)
+
+  afterModel: (model)->
+    model.set 'isDemo', evothings.isDemo
 
 `export default DebugRoute`

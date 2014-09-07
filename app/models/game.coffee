@@ -5,6 +5,7 @@ Game = DS.Model.extend
   startTime: DS.attr 'number'
   paused: DS.attr 'boolean'
 
+  isDemo: false
   players: DS.hasMany 'player'
 
 

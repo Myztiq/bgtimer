@@ -13,6 +13,12 @@ Controller = Ember.ObjectController.extend
 
   actions:
     start: ->
-      console.log 'START GAME! FUCK YES.'
+      # TODO - Send Start Game Event
+      @transitionToRoute 'game.status'
+
+    pickPlayer: (player)->
+      player.set 'button', true
+      player.set 'hasPressed', true
+
 
 `export default Controller`

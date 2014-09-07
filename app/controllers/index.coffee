@@ -48,6 +48,12 @@ IndexController = Ember.Controller.extend
         console.log 'Scan Failure', err
 
     connect: (device)->
+      if device == 'demo'
+        device = {
+          address: 'demo'
+        }
+        evothings.useDemoData()
+
       evothings.ble.connect device.address, ((info)=>
         state = evothings.ble.connectionState[info.state]
         console.log 'Updated connection state', state

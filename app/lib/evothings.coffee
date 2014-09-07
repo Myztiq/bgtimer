@@ -1,4 +1,4 @@
-foo =
+blueoothMock =
   ble:
     connectionState:
       0: 'STATE_DISCONNECTED'
@@ -300,16 +300,25 @@ foo =
     writeCharacteristic: ->
     enableNotification: ->
 
+exported = {
+  useDemoData: ->
+    exported.ble = blueoothMock.ble
+    exported.isDemo = true
+
+  isDemo: true
+  ble: blueoothMock.ble
+}
 
 checkForEvothings = ->
   setTimeout ->
     if evothings?
       console.log 'Found evothings', evothings
-      foo.ble = evothings.ble
+      exported.ble = evothings.ble
+      exported.isDemo = false
     else
       checkForEvothings()
   , 10
 
 checkForEvothings()
 
-`export default foo`
+`export default exported`
